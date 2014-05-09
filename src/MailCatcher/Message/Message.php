@@ -72,7 +72,7 @@ class Message implements MessageInterface
         $this->source = $data['source'];
         $this->size = $data['size'];
         $this->type = $data['type'];
-        $this->created_at = $data['created_at'];
+        $this->createdAt = $data['created_at'];
         $this->formats = $data['formats'];
     }
 

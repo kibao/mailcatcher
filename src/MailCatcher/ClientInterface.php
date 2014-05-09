@@ -48,11 +48,10 @@ interface ClientInterface
      */
     public function getLastMessage();
 
-
     /**
      * Returns messages which were sent to email.
      *
-     * @param string $email
+     * @param  string             $email
      * @return MessageInterface[]
      */
     public function getMessagesTo($email);

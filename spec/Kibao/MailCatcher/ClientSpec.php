@@ -89,7 +89,6 @@ class ClientSpec extends ObjectBehavior
         $this->getLastMessage()->shouldReturn(null);
     }
 
-
     function it_should_return_messages_to_given_recipient(ConnectionInterface $connection, ArrayToMessageTransformer $messageTransformer)
     {
         $rawMessages = array(
@@ -126,7 +125,7 @@ class ClientSpec extends ObjectBehavior
         $prophet->checkPredictions();
     }
 
-    public function getMatchers()
+    function getMatchers()
     {
         return array(
             'beMessagesArray' => function ($array) {
@@ -135,6 +134,7 @@ class ClientSpec extends ObjectBehavior
                             return false;
                         }
                     }
+
                     return true;
                 }
         );

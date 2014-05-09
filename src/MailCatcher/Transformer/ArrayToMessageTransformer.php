@@ -53,7 +53,8 @@ class ArrayToMessageTransformer
             "formats" => array()
         ), $data);
 
-        $data['sender'] = $this->addressTransformer->transform($data['sender']);
+        $data['created_at'] = $data['created_at'] === null ? null : new \DateTime($data['created_at']);
+        $data['sender'] = $data['sender'] === null ? null : $this->addressTransformer->transform($data['sender']);
 
         $recipients = array();
         foreach ($data['recipients'] as $recipient) {

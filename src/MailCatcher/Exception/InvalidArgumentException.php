@@ -10,7 +10,6 @@
  */
 namespace Kibao\MailCatcher\Exception;
 
-
 /**
  * Invalid argument exception.
  *

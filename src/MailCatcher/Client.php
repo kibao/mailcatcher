@@ -11,7 +11,6 @@
 namespace Kibao\MailCatcher;
 
 use Kibao\MailCatcher\Connection\ConnectionInterface;
-use Kibao\MailCatcher\Exception\InvalidArgumentException;
 use Kibao\MailCatcher\Transformer\ArrayToMessageTransformer;
 
 /**
