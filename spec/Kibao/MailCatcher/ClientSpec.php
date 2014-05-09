@@ -43,10 +43,10 @@ class ClientSpec extends ObjectBehavior
     function it_should_count_messages_properly(ConnectionInterface $connection)
     {
         $connection->getMessages()->willReturn(array(
-            array("id" => 1),
-            array("id" => 2),
-            array("id" => 3),
-            array("id" => 4),
+            array('id' => 4),
+            array('id' => 3),
+            array('id' => 2),
+            array('id' => 1),
         ));
 
         $this->count()->shouldReturn(4);
@@ -55,10 +55,10 @@ class ClientSpec extends ObjectBehavior
     function it_should_return_messages(ConnectionInterface $connection, ArrayToMessageTransformer $messageTransformer)
     {
         $connection->getMessages()->willReturn(array(
-            array("id" => 1),
-            array("id" => 2),
-            array("id" => 3),
-            array("id" => 4),
+            array('id' => 4),
+            array('id' => 3),
+            array('id' => 2),
+            array('id' => 1),
         ));
         $prophet = new Prophet();
         $messageTransformer->transform(Argument::any())->willReturn($prophet->prophesize('Kibao\MailCatcher\Message\MessageInterface'));
@@ -66,6 +66,27 @@ class ClientSpec extends ObjectBehavior
         $messages = $this->getMessages();
         $messages->shouldHaveCount(4);
         $messages->shouldBeMessagesArray();
+    }
+
+    function it_should_return_last_message(ConnectionInterface $connection, ArrayToMessageTransformer $messageTransformer, MessageInterface $message)
+    {
+        $connection->getMessages()->willReturn(array(
+            array('id' => 4),
+            array('id' => 3),
+            array('id' => 2),
+            array('id' => 1),
+        ));
+
+        $messageTransformer->transform(array('id' => 4))->willReturn($message);
+
+        $this->getLastMessage()->shouldReturn($message);
+    }
+
+    function it_should_return_null_if_there_is_no_last_message(ConnectionInterface $connection)
+    {
+        $connection->getMessages()->willReturn(array());
+
+        $this->getLastMessage()->shouldReturn(null);
     }
 
     public function getMatchers()

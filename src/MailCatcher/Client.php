@@ -65,6 +65,17 @@ class Client implements ClientInterface
         return $this->parseMessages($messages);
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function getLastMessage()
+    {
+        $messages = $this->connection->getMessages();
+        $last = array_shift($messages);
+
+        return $this->messageTransformer->transform($last);
+    }
+
     private function parseMessages($data)
     {
         $messages = array();
@@ -74,4 +85,5 @@ class Client implements ClientInterface
 
         return $messages;
     }
+
 }

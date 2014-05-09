@@ -39,4 +39,12 @@ interface ClientInterface
      * @return MessageInterface[]
      */
     public function getMessages();
+
+    /**
+     * Returns last message
+     *
+     * @throws \Kibao\MailCatcher\Exception\ConnectionException
+     * @return MessageInterface
+     */
+    public function getLastMessage();
 }
