@@ -9,25 +9,23 @@
  */
 namespace spec\Kibao\MailCatcher;
 
-use Guzzle\Http\ClientInterface as Guzzle;
-use Guzzle\Http\Message\RequestInterface;
-use Guzzle\Http\Message\Response;
+use Kibao\MailCatcher\Connection\ConnectionInterface;
 use Kibao\MailCatcher\Message\MessageInterface;
 use Kibao\MailCatcher\Transformer\ArrayToMessageTransformer;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Prophecy\Prophet;
 
-class GuzzleClientSpec extends ObjectBehavior
+class ClientSpec extends ObjectBehavior
 {
-    function let(ArrayToMessageTransformer $messageTransformer, Guzzle $guzzle)
+    function let(ArrayToMessageTransformer $messageTransformer, ConnectionInterface $connection)
     {
-        $this->beConstructedWith($messageTransformer, $guzzle);
+        $this->beConstructedWith($messageTransformer, $connection);
     }
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('Kibao\MailCatcher\GuzzleClient');
+        $this->shouldHaveType('Kibao\MailCatcher\Client');
     }
 
     function it_should_be_mailcatcher_client()
@@ -35,19 +33,16 @@ class GuzzleClientSpec extends ObjectBehavior
         $this->shouldImplement('Kibao\MailCatcher\ClientInterface');
     }
 
-    function it_should_purges_messages(Guzzle $guzzle, RequestInterface $request)
+    function it_should_purges_messages(ConnectionInterface $connection)
     {
-        $guzzle->delete('/messages')->willReturn($request);
-        $request->send()->shouldBeCalled();
+        $connection->deleteMessages()->shouldBeCalled();
 
         $this->purge();
     }
 
-    function it_should_count_messages_properly(Guzzle $guzzle, RequestInterface $request, Response $response)
+    function it_should_count_messages_properly(ConnectionInterface $connection)
     {
-        $guzzle->get('/messages')->willReturn($request);
-        $request->send()->willReturn($response);
-        $response->json()->willReturn(array(
+        $connection->getMessages()->willReturn(array(
             array("id" => 1),
             array("id" => 2),
             array("id" => 3),
@@ -57,11 +52,9 @@ class GuzzleClientSpec extends ObjectBehavior
         $this->count()->shouldReturn(4);
     }
 
-    function it_should_return_messages(Guzzle $guzzle, RequestInterface $request, Response $response, ArrayToMessageTransformer $messageTransformer)
+    function it_should_return_messages(ConnectionInterface $connection, ArrayToMessageTransformer $messageTransformer)
     {
-        $guzzle->get('/messages')->willReturn($request);
-        $request->send()->willReturn($response);
-        $response->json()->willReturn(array(
+        $connection->getMessages()->willReturn(array(
             array("id" => 1),
             array("id" => 2),
             array("id" => 3),

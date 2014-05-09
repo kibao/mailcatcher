@@ -11,11 +11,11 @@
 namespace Kibao\MailCatcher\Exception;
 
 /**
- * Invalid address exception.
+ * MailCatcher exception.
  *
  * @author Przemysław Piechota <kibao.pl@gmail.com>
  */
-class AddressException extends AbstractException
+abstract class AbstractException extends \Exception
 {
 
 }

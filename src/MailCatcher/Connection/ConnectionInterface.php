@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the MailCatcher package.
  *
@@ -8,35 +7,27 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace Kibao\MailCatcher;
-use Kibao\MailCatcher\Message\MessageInterface;
+namespace Kibao\MailCatcher\Connection;
 
 /**
- * Client interface for MailCatcher.
+ * MailCatcher Connection Interface
  *
  * @author Przemysław Piechota <kibao.pl@gmail.com>
  */
-interface ClientInterface
+interface ConnectionInterface
 {
     /**
-     * @throws \Kibao\MailCatcher\Exception\ConnectionException
-     * @return ClientInterface
-     */
-    public function purge();
-
-    /**
-     * Returns messages count
+     * Deletes all messages in MailCatcher
      *
      * @throws \Kibao\MailCatcher\Exception\ConnectionException
-     * @return integer
      */
-    public function count();
+    public function deleteMessages();
 
     /**
-     * Returns messages
+     * Returns messages from MailCatcher
      *
      * @throws \Kibao\MailCatcher\Exception\ConnectionException
-     * @return MessageInterface[]
+     * @return array
      */
     public function getMessages();
 }

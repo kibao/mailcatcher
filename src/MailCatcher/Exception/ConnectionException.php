@@ -1,5 +1,4 @@
 <?php
-
 /*
  * This file is part of the MailCatcher package.
  *
@@ -11,11 +10,11 @@
 namespace Kibao\MailCatcher\Exception;
 
 /**
- * Invalid address exception.
+ * MailCatcher connection exception.
  *
  * @author Przemysław Piechota <kibao.pl@gmail.com>
  */
-class AddressException extends AbstractException
+class ConnectionException extends AbstractException
 {
 
 }

@@ -8,10 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace Kibao\MailCatcher;
 
-use Guzzle\Http\ClientInterface as Guzzle;
+use Kibao\MailCatcher\Connection\ConnectionInterface;
 use Kibao\MailCatcher\Transformer\ArrayToMessageTransformer;
 
 /**
@@ -19,21 +18,21 @@ use Kibao\MailCatcher\Transformer\ArrayToMessageTransformer;
  *
  * @author Przemysław Piechota <kibao.pl@gmail.com>
  */
-class GuzzleClient implements ClientInterface
+class Client implements ClientInterface
 {
     /**
      * @var Transformer\ArrayToMessageTransformer
      */
     protected $messageTransformer;
     /**
-     * @var \Guzzle\Http\ClientInterface
+     * @var ConnectionInterface
      */
-    protected $guzzle;
+    protected $connection;
 
-    public function __construct(ArrayToMessageTransformer $messageTransformer, Guzzle $guzzle)
+    public function __construct(ArrayToMessageTransformer $messageTransformer, ConnectionInterface $connection)
     {
         $this->messageTransformer = $messageTransformer;
-        $this->guzzle = $guzzle;
+        $this->connection = $connection;
     }
 
     /**
@@ -41,7 +40,9 @@ class GuzzleClient implements ClientInterface
      */
     public function purge()
     {
-        $this->guzzle->delete('/messages')->send();
+        $this->connection->deleteMessages();
+
+        return $this;
     }
 
     /**
@@ -49,7 +50,7 @@ class GuzzleClient implements ClientInterface
      */
     public function count()
     {
-        $messages = $this->guzzle->get('/messages')->send()->json();
+        $messages = $this->connection->getMessages();
 
         return count($messages);
     }
@@ -59,7 +60,7 @@ class GuzzleClient implements ClientInterface
      */
     public function getMessages()
     {
-        $messages = $this->guzzle->get('/messages')->send()->json();
+        $messages = $this->connection->getMessages();
 
         return $this->parseMessages($messages);
     }
