@@ -89,6 +89,43 @@ class ClientSpec extends ObjectBehavior
         $this->getLastMessage()->shouldReturn(null);
     }
 
+
+    function it_should_return_messages_to_given_recipient(ConnectionInterface $connection, ArrayToMessageTransformer $messageTransformer)
+    {
+        $rawMessages = array(
+            array('id' => 4, 'recipients' => array('john.doe@example.com')),
+            array('id' => 2, 'recipients' => array('demo@example.com', 'john.doe@example.com'),),
+            array('id' => 1, 'recipients' => array('john@example.com')),
+        );
+        $prophet = new Prophet();
+        $mockMessages = array(
+            $prophet->prophesize('Kibao\MailCatcher\Message\MessageInterface'),
+            $prophet->prophesize('Kibao\MailCatcher\Message\MessageInterface'),
+            $prophet->prophesize('Kibao\MailCatcher\Message\MessageInterface'),
+        );
+
+        for ($i = 0; $i < 3; $i++) {
+            $rawMessage = $rawMessages[$i];
+            $recipients = array();
+            foreach ($rawMessage['recipients'] as $email) {
+                $recipient = $prophet->prophesize('Kibao\MailCatcher\Address\AddressInterface');
+                $recipient->getEmail()->willReturn($email);
+                $recipients[] = $recipient;
+            }
+            $mockMessages[$i]->getRecipients()->willReturn($recipients);
+
+            $messageTransformer->transform($rawMessage)->willReturn($mockMessages[$i]);
+        }
+
+        $connection->getMessages()->willReturn($rawMessages);
+
+        $this->getMessagesTo('john.doe@example.com')->shouldReturn(array(
+            $mockMessages[0],
+            $mockMessages[1],
+        ));
+        $prophet->checkPredictions();
+    }
+
     public function getMatchers()
     {
         return array(

@@ -11,6 +11,7 @@
 namespace Kibao\MailCatcher;
 
 use Kibao\MailCatcher\Connection\ConnectionInterface;
+use Kibao\MailCatcher\Exception\InvalidArgumentException;
 use Kibao\MailCatcher\Transformer\ArrayToMessageTransformer;
 
 /**
@@ -74,6 +75,26 @@ class Client implements ClientInterface
         $last = array_shift($messages);
 
         return $this->messageTransformer->transform($last);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessagesTo($email)
+    {
+        $messages = $this->getMessages();
+
+        $results = array();
+        foreach ($messages as $message) {
+            foreach ($message->getRecipients() as $recipient) {
+                if ($recipient->getEmail() === $email) {
+                    $results[] = $message;
+                    break;
+                }
+            }
+        }
+
+        return $results;
     }
 
     private function parseMessages($data)
