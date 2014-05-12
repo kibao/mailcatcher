@@ -99,7 +99,8 @@ class Client implements ClientInterface
     private function parseMessages($data)
     {
         $messages = array();
-        foreach ($data as $message) {
+        foreach ($data as $row) {
+            $message = $this->connection->getMessage($row['id']);
             $messages[] = $this->messageTransformer->transform($message);
         }
 

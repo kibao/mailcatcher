@@ -54,4 +54,16 @@ class GuzzleConnection implements ConnectionInterface
             throw new ConnectionException("", 0, $e);
         }
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getMessage($id)
+    {
+        try {
+            return $this->guzzle->get('/messages/' . $id . '.json')->send()->json();
+        } catch (GuzzleException $e) {
+            throw new ConnectionException("", 0, $e);
+        }
+    }
 }

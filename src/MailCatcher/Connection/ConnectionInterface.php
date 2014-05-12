@@ -30,4 +30,13 @@ interface ConnectionInterface
      * @return array
      */
     public function getMessages();
+
+    /**
+     * Returns message from MailCatcher
+     *
+     * @throws \Kibao\MailCatcher\Exception\ConnectionException
+     * @param  $id
+     * @return array
+     */
+    public function getMessage($id);
 }

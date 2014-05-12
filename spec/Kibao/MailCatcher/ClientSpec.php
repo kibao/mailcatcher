@@ -54,12 +54,16 @@ class ClientSpec extends ObjectBehavior
 
     function it_should_return_messages(ConnectionInterface $connection, ArrayToMessageTransformer $messageTransformer)
     {
-        $connection->getMessages()->willReturn(array(
+        $data = array(
             array('id' => 4),
             array('id' => 3),
             array('id' => 2),
             array('id' => 1),
-        ));
+        );
+        $connection->getMessages()->willReturn($data);
+        foreach($data as $row){
+            $connection->getMessage($row['id'])->willReturn($row);
+        }
         $prophet = new Prophet();
         $messageTransformer->transform(Argument::any())->willReturn($prophet->prophesize('Kibao\MailCatcher\Message\MessageInterface'));
 
@@ -96,6 +100,7 @@ class ClientSpec extends ObjectBehavior
             array('id' => 2, 'recipients' => array('demo@example.com', 'john.doe@example.com'),),
             array('id' => 1, 'recipients' => array('john@example.com')),
         );
+
         $prophet = new Prophet();
         $mockMessages = array(
             $prophet->prophesize('Kibao\MailCatcher\Message\MessageInterface'),
@@ -114,6 +119,8 @@ class ClientSpec extends ObjectBehavior
             $mockMessages[$i]->getRecipients()->willReturn($recipients);
 
             $messageTransformer->transform($rawMessage)->willReturn($mockMessages[$i]);
+
+            $connection->getMessage($rawMessage['id'])->willReturn($rawMessage);
         }
 
         $connection->getMessages()->willReturn($rawMessages);
